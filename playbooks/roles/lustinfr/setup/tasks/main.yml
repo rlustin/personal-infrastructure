@@ -1,0 +1,44 @@
+- name: "Update and upgrade packages"
+  apt:
+    update_cache: yes
+    upgrade: dist
+
+- name: "Install packages"
+  apt:
+    name:
+    - htop
+    - vim
+    - tmux
+    state: present
+
+- name: "Remove un-needed packages"
+  apt:
+    name:
+    - snap
+    - lvm2
+    - lxcfs
+    state: absent
+
+- name: "Setup profile"
+  copy:
+    src: profile
+    dest: "{{ user_home }}/.profile"
+    owner: "{{ user }}"
+
+- name: 'Set hostname'
+  hostname:
+    name: "{{ hostname }}"
+
+- name: "Make hostname resolvable"
+  lineinfile:
+    path: /etc/hosts
+    regexp: '127.0.0.1 localhost'
+    line: "127.0.0.1 localhost {{ hostname }}"
+    state: present
+
+- name: "Setup user authorized keys"
+  template:
+    src: authorized_keys.j2
+    dest: "{{ user_home }}/.ssh/authorized_keys"
+    owner: "{{ user }}"
+    group: "{{ group }}"

@@ -1,0 +1,16 @@
+.DS_Store
+*.retry
+*~
+.terraform
+terraform.tfstate*
+.terraform.lock.hc
+crash.log
+.env/
+playbooks/host_vars/perso.*
+
+terraform/global_vars/main.tf
+
+.env/
+*.code-workspace
+*.swp
+terraform/global_vars/main.tf

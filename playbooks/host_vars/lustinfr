@@ -1,0 +1,26 @@
+# misc
+hostname: lustinfr
+user_ssh_authorized:
+- "{{ user }}"
+- "{{ git_user }}"
+
+# certbot
+certbot_list_of_certs_to_create:
+  - "{{ atrema_domain }}"
+  - "{{ page_domain }}"
+
+# Git
+git_home: "/home/{{ git_user }}"
+git_user: git
+git_group: git
+git_ssh_authorized_keys: "{{ user_ssh_authorized_keys }}"
+
+# atrema
+atrema_repo: "{{ git_home }}/atrema.git"
+atrema_web_dir: "{{ web_home }}/atrema"
+atrema_domain: "{{ atrema_fr_domain }}"
+
+# page
+page_repo: "{{ git_home }}/page.git"
+page_web_dir: "{{ web_home }}/page"
+page_domain: "{{ main_domain }}"

@@ -1,0 +1,15 @@
+---
+- hosts: lustinfr
+  user: "{{ user }}"
+  become: yes
+  become_method: sudo
+
+  roles:
+  - { role: setup, tags: ['setup'] }
+  - { role: setup-user-systemd, tags: ['setup-user-systemd'] }
+  - { role: security, tags: ['security'] }
+  - { role: git, tags: ['git'] }
+  - { role: certbot, tags: ['certbot', 'web'] }
+  - { role: nginx, tags: ['nginx', 'web'] }
+  - { role: page, tags: ['page', 'web'] }
+  - { role: atrema, tags: ['page', 'web'] }

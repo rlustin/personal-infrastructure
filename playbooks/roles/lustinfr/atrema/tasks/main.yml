@@ -1,0 +1,53 @@
+---
+- name: "Create atrema git bare repo"
+  command: "git init --bare --shared {{ atrema_repo }}"
+  args:
+    creates: "{{ atrema_repo }}"
+
+- name: "Chance user/group of the page git repo"
+  file:
+    path: "{{ atrema_repo }}"
+    owner: "{{ git_user }}"
+    group: "{{ git_group }}"
+    recurse: true
+
+- name: "Deploy git post receive hook"
+  template:
+    src: git-post-receive-hook.j2
+    dest: "{{ atrema_repo }}/hooks/post-receive"
+    owner: "{{ git_user }}"
+    group: "{{ git_group }}"
+    mode: 0755
+
+- name: "Create atrema www directory"
+  file:
+    path: "{{ atrema_web_dir }}"
+    state: directory
+    owner: "{{ web_user }}"
+    group: "{{ git_group }}"
+    mode: 0775
+
+- name: "Create additional www directory"
+  file:
+    path: "{{ atrema_web_dir }}/{{ item }}"
+    state: directory
+    owner: "{{ web_user }}"
+    group: users
+    mode: 0775
+  with_items:
+    - public
+
+- name: "Copy atrema sites-available nginx conf"
+  template:
+    src: atrema.conf.j2
+    dest: /etc/nginx/sites-available/atrema.conf
+    owner: root
+    group: root
+  notify: "reload nginx"
+
+- name: "Link atrema sites-enabled nginx conf"
+  file:
+    src: /etc/nginx/sites-available/atrema.conf
+    dest: /etc/nginx/sites-enabled/atrema.conf
+    state: link
+  notify: "reload nginx"

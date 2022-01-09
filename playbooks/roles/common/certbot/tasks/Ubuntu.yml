@@ -1,0 +1,10 @@
+- name: software-properties-common installed
+  apt:
+    name: software-properties-common
+    state: latest
+
+- name: install certbot
+  community.general.snap:
+    name: certbot
+    channel: latest
+    classic: true

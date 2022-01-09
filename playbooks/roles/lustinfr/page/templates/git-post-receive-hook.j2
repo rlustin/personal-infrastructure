@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# {{ ansible_managed }}
+
+set -e
+
+PAGE_DIR={{ page_web_dir }}
+PAGE_GIT={{ page_repo }}
+
+unset GIT_INDEX_FILE
+
+git --work-tree=$PAGE_DIR --git-dir=$PAGE_GIT checkout -f main

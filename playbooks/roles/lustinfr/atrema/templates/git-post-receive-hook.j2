@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# {{ ansible_managed }}
+
+set -e
+
+ATREMA_DIR={{ atrema_web_dir }}
+ATREMA_GIT={{ atrema_repo }}
+
+unset GIT_INDEX_FILE
+
+git --work-tree=$ATREMA_DIR --git-dir=$ATREMA_GIT checkout -f main

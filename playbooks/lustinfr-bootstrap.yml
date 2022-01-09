@@ -1,0 +1,7 @@
+---
+- hosts: lustinfr
+  user: ubuntu
+  become: yes
+  become_method: sudo
+  roles:
+  - first-deploy

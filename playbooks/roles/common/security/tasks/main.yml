@@ -1,0 +1,91 @@
+---
+
+- name: "Set default ACCEPT policies"
+  iptables:
+    chain: "{{ item }}"
+    policy: ACCEPT
+  with_items:
+    - INPUT
+    - OUTPUT
+
+# - name: "Set default DROP policies"
+#   iptables:
+#     chain: FORWARD
+#     policy: DROP
+
+# - name: "Accept related traffic"
+#   iptables:
+#     chain: INPUT
+#     ctstate: ESTABLISHED,RELATED
+#     jump: ACCEPT
+#     comment: ansible managed
+
+# - name: "Accept local traffic"
+#   iptables:
+#     chain: INPUT
+#     in_interface: lo
+#     jump: ACCEPT
+#     comment: ansible managed
+
+# - name: "Accept ICMP"
+#   iptables:
+#     chain: INPUT
+#     protocol: icmp
+#     match: icmp
+#     icmp_type: 8
+#     jump: ACCEPT
+#     comment: ansible managed
+
+# - name: "Accept input TCP traffic on select ports"
+#   iptables:
+#     chain: INPUT
+#     protocol: tcp
+#     destination_port: "{{ item }}"
+#     source: 0.0.0.0/0
+#     jump: ACCEPT
+#     comment: ansible managed
+#   with_items:
+#     - 22
+#     - 80
+#     - 443
+
+# - name: "Drop traffic on all the other TCP ports"
+#   iptables:
+#     chain: INPUT
+#     jump: DROP
+#     comment: ansible managed
+
+- name: "Prevent ssh root login"
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PermitRootLogin'
+    line: 'PermitRootLogin no'
+    state: present
+  notify:
+    - restart ssh
+
+# - name: "Prevent X11 forwarding"
+#   lineinfile:
+#     path: /etc/ssh/sshd_config
+#     regexp: '^X11Forwarding'
+#     line: 'X11Forwarding no'
+#     state: present
+#   notify:
+#     - restart ssh
+
+# - name: "Prevent TCP forwarding"
+#   lineinfile:
+#     path: /etc/ssh/sshd_config
+#     regexp: '^AllowTcpForwarding'
+#     line: 'AllowTcpForwarding no'
+#     state: present
+#   notify:
+#     - restart ssh
+
+- name: "Only authorize select users to ssh"
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    line: "AllowUsers {{ user_ssh_authorized | join(' ')}}"
+    state: present
+  notify:
+    - restart ssh

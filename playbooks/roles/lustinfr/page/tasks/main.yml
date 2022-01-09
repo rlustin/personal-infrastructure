@@ -1,0 +1,53 @@
+---
+- name: "Create page git bare repo"
+  command: "git init --bare --shared {{ page_repo }}"
+  args:
+    creates: "{{ page_repo }}"
+
+- name: "Chance user/group of the page git repo"
+  file:
+    path: "{{ page_repo }}"
+    owner: "{{ git_user }}"
+    group: "{{ git_group }}"
+    recurse: true
+
+- name: "Deploy git post receive hook"
+  template:
+    src: git-post-receive-hook.j2
+    dest: "{{ page_repo }}/hooks/post-receive"
+    owner: "{{ git_user }}"
+    group: "{{ git_group }}"
+    mode: 0755
+
+- name: "Create page www directory"
+  file:
+    path: "{{ page_web_dir }}"
+    state: directory
+    owner: "{{ web_user }}"
+    group: "{{ git_group }}"
+    mode: 0775
+
+- name: "Create additional www directory"
+  file:
+    path: "{{ page_web_dir }}/{{ item }}"
+    state: directory
+    owner: "{{ web_user }}"
+    group: users
+    mode: 0775
+  with_items:
+    - public
+
+- name: "Copy page sites-available nginx conf"
+  template:
+    src: page.conf.j2
+    dest: /etc/nginx/sites-available/page.conf
+    owner: root
+    group: root
+  notify: "reload nginx"
+
+- name: "Link page sites-enabled nginx conf"
+  file:
+    src: /etc/nginx/sites-available/page.conf
+    dest: /etc/nginx/sites-enabled/page.conf
+    state: link
+  notify: "reload nginx"
