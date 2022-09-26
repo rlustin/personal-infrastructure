@@ -9,6 +9,7 @@
     - htop
     - vim
     - tmux
+    - snapd
     state: present
 
 - name: "Remove un-needed packages"
@@ -18,6 +19,11 @@
     - lvm2
     - lxcfs
     state: absent
+
+- name: "Install zola"
+  snap:
+    name: zola
+    channel: edge
 
 - name: "Setup profile"
   copy:

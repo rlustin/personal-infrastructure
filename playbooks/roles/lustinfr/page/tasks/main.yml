@@ -11,6 +11,13 @@
     group: "{{ git_group }}"
     recurse: true
 
+- name: "Create zola directory"
+  file:
+    path: "{{ page_zola_dir }}"
+    owner: "{{ git_user }}"
+    group: "{{ git_group }}"
+    recurse: true
+
 - name: "Deploy git post receive hook"
   template:
     src: git-post-receive-hook.j2

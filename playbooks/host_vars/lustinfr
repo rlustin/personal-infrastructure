@@ -22,5 +22,6 @@ atrema_domain: "{{ atrema_fr_domain }}"
 
 # page
 page_repo: "{{ git_home }}/page.git"
+page_zola_dir: "{{ git_home }}/page.zola"
 page_web_dir: "{{ web_home }}/page"
 page_domain: "{{ main_domain }}"
