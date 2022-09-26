@@ -121,6 +121,37 @@ resource "ovh_domain_zone_record" "mx7" {
   target    = "10 aspmx5.googlemail.com."
 }
 
+resource "ovh_domain_zone_record" "fastmail_dkim_1" {
+  zone      = module.global_vars.root_domain
+  subdomain = "fm1._domainkey"
+  fieldtype = "CNAME"
+  ttl       = "300"
+  target    = "fm1.lustin.fr.dkim.fmhosted.com."
+}
+
+resource "ovh_domain_zone_record" "fastmail_dkim_2" {
+  zone      = module.global_vars.root_domain
+  subdomain = "fm2._domainkey"
+  fieldtype = "CNAME"
+  ttl       = "300"
+  target    = "fm2.lustin.fr.dkim.fmhosted.com."
+}
+
+resource "ovh_domain_zone_record" "fastmail_dkim_3" {
+  zone      = module.global_vars.root_domain
+  subdomain = "fm3._domainkey"
+  fieldtype = "CNAME"
+  ttl       = "300"
+  target    = "fm3.lustin.fr.dkim.fmhosted.com."
+}
+
+resource "ovh_domain_zone_record" "fastmail_spf" {
+  zone      = module.global_vars.root_domain
+  fieldtype = "TXT"
+  ttl       = "300"
+  target    = "v=spf1 include:spf.messagingengine.com ?all"
+}
+
 resource "ovh_domain_zone_record" "dkim" {
   zone      = module.global_vars.root_domain
   subdomain = "lustinemails._domainkey"
